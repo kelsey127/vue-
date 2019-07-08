@@ -3,7 +3,7 @@
         <div class="todo-wrap">
             <TodoHeader :addTodo='addTodo'/>
             <TodoList :todos='todos' :delTodo='delTodo'/>
-            <TodoFooter/>
+            <TodoFooter :todos='todos' :checkAllTodos='checkAllTodos'/>
         </div>
     </div>
 </template>
@@ -13,6 +13,7 @@
 import TodoHeader from './components/TodoHeader.vue';
 import TodoList from './components/TodoList.vue';
 import TodoFooter from './components/TodoFooter.vue';
+import Storage from '../utils/utils.js'
 
 export default {
     methods:{
@@ -22,19 +23,26 @@ export default {
         
         delTodo(index){
             this.todos.splice(index,1);
+        },
+
+        checkAllTodos(isCheck){
+            this.todos.forEach((todo) => {todo.isShow = isCheck});
         }
     },
 
     data(){
         return{
-            todos:[
-                {id:1,title:'美女',isShow:false},
-                {id:2,title:'靓女',isShow:true},
-                {id:3,title:'大帅',isShow:false},
-            ]
+            todos:Storage.getTodos()
         }
     },
-
+    
+    watch:{
+        todos:{
+            deep:true,
+            handler:Storage.setTodos
+        }
+        
+    },
 
     components:{
             TodoHeader,
